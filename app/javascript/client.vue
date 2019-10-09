@@ -13,7 +13,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 p {
   font-size: 2em;
   text-align: center;
