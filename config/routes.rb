@@ -6,10 +6,12 @@ Rails.application.routes.draw do
 
   namespace :staffs do
     root 'application#index'
+    get '/user', to: 'application#user', as: :user
   end
 
   namespace :clients do
     root 'application#index'
+    get '/user', to: 'application#user', as: :user
   end
 
   namespace :api do
