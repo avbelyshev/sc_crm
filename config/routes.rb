@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   namespace :staffs do
     root 'application#index'
     get '/user', to: 'application#user', as: :user
+    resources :clients, only: %i[index create], shallow: true
   end
 
   namespace :clients do

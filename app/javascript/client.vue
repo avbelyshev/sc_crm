@@ -20,7 +20,7 @@
     },
     methods: {
       fetchUser() {
-        backend.user('/clients/user')
+        backend.clients.user()
           .then(response => {
             this.user = response.data.user
           })

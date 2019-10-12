@@ -11,8 +11,15 @@ const adapter = axios.create({
 })
 
 const backend = {
-  user: (url) => adapter.get(url)
-};
+  staffs: {
+    user: () => adapter.get('/staffs/user'),
+    clientsList: () => adapter.get('/staffs/clients'),
+    createClient: (params) => adapter.post('/staffs/clients', params)
+  },
+  clients: {
+    user: () => adapter.get('/clients/user')
+  }
+}
 
 export {
   backend
