@@ -89,7 +89,10 @@
               this.$emit('new-client', response.data)
             })
             .catch((error) => {
-              console.log(error, error.response.data)
+              //console.log(error, error.response.data)
+              let responseErrors = error.response.data
+              Object.keys(responseErrors).forEach(key => { this.errors[key] = responseErrors[key] })
+              this.$forceUpdate()
             })
         }
       }

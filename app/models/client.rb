@@ -7,5 +7,5 @@ class Client < ApplicationRecord
   include DeviseTokenAuth::Concerns::User
 
   validates :fullname, presence: true, length: { minimum: 5 }
-  validates :phone, presence: true
+  validates :phone, presence: true, uniqueness: true
 end
