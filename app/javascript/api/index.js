@@ -18,6 +18,11 @@ const backend = {
   },
   clients: {
     user: () => adapter.get('/clients/user')
+  },
+  organizations: {
+    index: () => adapter.get('/staffs/organizations'),
+    create: (params) => adapter.post('/staffs/organizations', params),
+    destroy: (id) => adapter.delete(`/staffs/organizations/${id}`)
   }
 }
 
