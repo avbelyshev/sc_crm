@@ -1,19 +1,5 @@
 <template lang="pug">
-  div.table
-    h4 List of clients
-    table
-      thead
-        tr
-          th id
-          th Full name
-          th Email
-          th Phone
-      tbody
-        tr(v-for="client in clients" :key="client.id")
-          td {{ client.id }}
-          td {{ client.fullname }}
-          td {{ client.email }}
-          td {{ client.phone }}
+  q-table(dense title="List of clients" :data="clients" :columns="columns" row-key="name" :pagination.sync="pagination")
 </template>
 
 <script>
@@ -23,15 +9,24 @@
         type: Array,
         required: true
       }
+    },
+    data () {
+      return {
+        pagination: {
+          page: 1,
+          rowsPerPage: 15,
+        },
+        columns: [
+          { name: 'id', label: 'id', field: 'id', align: 'left' },
+          { name: 'fullname', label: 'Full name', field: 'fullname', align: 'left' },
+          { name: 'email', label: 'Email', field: 'email', align: 'left' },
+          { name: 'phone', label: 'Phone', field: 'phone', align: 'left' }
+        ]
+      }
     }
   }
 </script>
 
 <style lang="scss" scoped>
-  th {
-    border: 2px solid #000000;
-  }
-  td {
-    border: .5px solid #000000;
-  }
+
 </style>

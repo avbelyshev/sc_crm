@@ -1,25 +1,21 @@
 <template lang="pug">
   .container
-    h4 Create new client
-    form(@submit.prevent="onSubmit")
+    h6 Create new client
+    q-form(@submit.prevent="onSubmit" class="q-gutter-md")
       .control
-        label(for="fullname") Full name
-        input(id="fullname" type="text" v-model="client.fullname")
+        q-input(outlined id="fullname" type="text" v-model="client.fullname" label="Full name" stack-label)
         span.error(v-if="isInvalidField('fullname')" ) {{ fieldError('fullname') }}
       .control
-        label(for="email") Email
-        input(id="email" type="email" v-model="client.email")
+        q-input(outlined id="email" type="email" v-model="client.email" label="Email" stack-label)
         span.error(v-if="isInvalidField('email')" ) {{ fieldError('email') }}
       .control
-        label(for="phone") Phone
-        input(id="phone" type="text" v-model="client.phone")
+        q-input(outlined id="phone" type="text" v-model="client.phone" label="Phone" stack-label)
         span.error(v-if="isInvalidField('phone')" ) {{ fieldError('phone') }}
       .control
-        label(for="password") Password
-        input(id="password" type="text" v-model="client.password")
+        q-input(outlined id="password" type="text" v-model="client.password" label="Password" stack-label)
         span.error(v-if="isInvalidField('password')" ) {{ fieldError('password') }}
       .action
-        button(type="submit") Add client
+        q-btn(type="submit") Add client
 </template>
 
 <script>
@@ -99,16 +95,6 @@
 </script>
 
 <style lang="scss">
-  input {
-    display: block;
-    padding: 5px;
-    margin: 5px;
-    font-size: 20px;
-  }
-  button {
-    padding: 10px;
-    font-size: 20px;
-  }
   span.error {
     font-size: 15px;
     color: red;

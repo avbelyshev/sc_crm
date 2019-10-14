@@ -1,9 +1,8 @@
 <template lang="pug">
   div
-    h4 Dashboard
-    div
+    div(class="q-pa-md")
       ClientsList(:clients="clients")
-    div
+    div(class="q-pa-md" style="max-width: 400px")
       ClientForm(@new-client="addNewClient")
 </template>
 

@@ -1,7 +1,9 @@
 <template lang="pug">
   #app
-    navbar(:user="user")
-    dashboard
+    q-layout(view='hHh Lpr fFf' class="bg-grey-1")
+      navbar(:user="user")
+      q-page-container
+        dashboard
 </template>
 
 <script>
