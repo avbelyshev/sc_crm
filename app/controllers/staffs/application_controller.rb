@@ -4,4 +4,8 @@ class Staffs::ApplicationController < ApplicationController
   layout 'staff'
 
   def index; end
+
+  def user
+    @user = current_staff
+  end
 end

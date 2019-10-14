@@ -8,6 +8,9 @@
 import Vue from 'vue'
 import App from '../staff.vue'
 
+import { backend } from '../api/index.js'
+Vue.prototype.$backend = backend
+
 document.addEventListener('DOMContentLoaded', () => {
   const app = new Vue({
     render: h => h(App)
