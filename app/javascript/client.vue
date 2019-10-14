@@ -1,18 +1,15 @@
 <template lang="pug">
   #app
     navbar(:user="user")
-    p {{ message }}
 </template>
 
 <script>
-  import { backend } from 'api/index.js'
   import Navbar from 'components/navbar.vue'
 
   export default {
     data: function () {
       return {
-        user: {},
-        message: "Hello Client!"
+        user: {}
       }
     },
     created() {
@@ -20,7 +17,7 @@
     },
     methods: {
       fetchUser() {
-        backend.clients.user()
+        this.$backend.clients.user()
           .then(response => {
             this.user = response.data.user
           })
@@ -36,8 +33,5 @@
 </script>
 
 <style scoped lang="scss">
-  p {
-    font-size: 2em;
-    text-align: center;
-  }
+
 </style>

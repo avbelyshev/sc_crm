@@ -3,7 +3,7 @@
     ul
       li
         a(href="/")
-          img(src="../../assets/images/logo.png")
+          img(:src="require('images/logo.png')")
       li
         span {{ user.email }}
       li

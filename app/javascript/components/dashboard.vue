@@ -8,7 +8,6 @@
 </template>
 
 <script>
-  import { backend } from '../api/index.js'
   import ClientsList from './clients/list.vue'
   import ClientForm from './clients/form.vue'
 
@@ -23,7 +22,7 @@
     },
     methods: {
       fetchClients() {
-        backend.staffs.clientsList()
+        this.$backend.staffs.clientsList()
           .then(response => {
             this.clients = response.data
           })
