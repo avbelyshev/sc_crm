@@ -21,7 +21,8 @@ import {
   QSpace,
   QTable,
   QForm,
-  QInput
+  QInput,
+  QSpinnerHourglass
 } from 'quasar'
 
 Vue.use(Quasar, {
@@ -38,7 +39,8 @@ Vue.use(Quasar, {
     QSpace,
     QTable,
     QForm,
-    QInput
+    QInput,
+    QSpinnerHourglass
   },
   directives: {
   },

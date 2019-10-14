@@ -1,5 +1,7 @@
 <template lang="pug">
   div
+    .loading(v-if="loading")
+      q-spinner-hourglass.fixed-center(color="primary" size="8em" :thickness="10")
     div(class="q-pa-md")
       ClientsList(:clients="clients")
     div(class="q-pa-md" style="max-width: 400px")
@@ -13,6 +15,7 @@
   export default {
     data() {
       return {
+        loading: true,
         clients: []
       }
     },
@@ -25,6 +28,7 @@
           .then(response => {
             this.clients = response.data
           })
+          .finally(() => this.loading = false)
       },
       addNewClient(client) {
         this.clients.push(client)
