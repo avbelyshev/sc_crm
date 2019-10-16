@@ -19,11 +19,14 @@ class Staffs::OrganizationsController < ApplicationController
     @organization = Organization.find(params[:id])
 
     if @organization.destroy
-      render json: @organization, status: :accepted
+      render json: "successfully deleted", status: :accepted
     else
       render json: @organization.errors, status: :unprocessable_entity
     end
+  end
 
+  def legal_forms
+    render json: Organization::LEGAL_FORMS
   end
 
   private

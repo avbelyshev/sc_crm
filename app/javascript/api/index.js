@@ -22,7 +22,8 @@ const backend = {
   organizations: {
     index: () => adapter.get('/staffs/organizations'),
     create: (params) => adapter.post('/staffs/organizations', params),
-    destroy: (id) => adapter.delete(`/staffs/organizations/${id}`)
+    destroy: (id) => adapter.delete(`/staffs/organizations/${id}`),
+    legal_forms: () => adapter.get('/staffs/organizations/legal_forms'),
   }
 }
 

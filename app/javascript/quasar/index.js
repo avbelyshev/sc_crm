@@ -18,8 +18,13 @@ import {
     QBtn,
     QSpace,
     QTable,
+    QTr,
+    QTd,
+    QTabs,
+    QTab,
     QForm,
     QInput,
+    QSelect,
     QSpinnerHourglass
 } from 'quasar'
 
@@ -36,8 +41,13 @@ Vue.use(Quasar, {
         QBtn,
         QSpace,
         QTable,
+        QTr,
+        QTd,
+        QTabs,
+        QTab,
         QForm,
         QInput,
+        QSelect,
         QSpinnerHourglass
     },
     directives: {
