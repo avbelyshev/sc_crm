@@ -3,17 +3,17 @@
     h6 Create new organization
     q-form(@submit.prevent="onSubmit" class="q-gutter-md")
       .control
-        q-input(outlined id="name" type="text" v-model="organization.name" label="Name" stack-label)
-        span.error(v-if="isInvalidField('name')" ) {{ fieldError('name') }}
+        q-input(outlined ref="name" v-model="organization.name" label="Name" stack-label
+          lazy-rules :rules="rules.name")
       .control
-        q-select(outlined id="legal_form" type="email" v-model="organization.legal_form" :options="legal_forms" label="Legal form" stack-label)
-        span.error(v-if="isInvalidField('legal_form')" ) {{ fieldError('legal_form') }}
+        q-select(outlined ref="legal_form" v-model="organization.legal_form" :options="legal_forms" label="Legal form" stack-label
+          lazy-rules :rules="rules.legal_form")
       .control
-        q-input(outlined id="inn" type="text" v-model="organization.inn" label="Inn" stack-label)
-        span.error(v-if="isInvalidField('inn')" ) {{ fieldError('inn') }}
+        q-input(outlined ref="inn" v-model="organization.inn" label="Inn" stack-label
+          lazy-rules :rules="rules.inn")
       .control
-        q-input(outlined id="ogrn" type="text" v-model="organization.ogrn" label="Ogrn" stack-label)
-        span.error(v-if="isInvalidField('ogrn')" ) {{ fieldError('ogrn') }}
+        q-input(outlined ref="ogrn" v-model="organization.ogrn" label="Ogrn" stack-label
+          lazy-rules :rules="rules.ogrn")
       .action
         q-btn(type="submit") Add organization
 </template>
@@ -29,11 +29,13 @@
           ogrn: ''
         },
         legal_forms: [],
-        errors: {
-          name: [],
-          legal_form: [],
-          inn: [],
-          ogrn: []
+        rules: {
+          name: [ val => val && val.length > 0 || 'Name must be filled'],
+          legal_form: [ val => val && val.length > 0 || 'Legal form must be filled'],
+          inn: [ val => isNaN(val) === false || 'Inn: there should be only numbers',
+                 val => val.length === 10 || val.length === 12 || 'Inn: must be 10 or 12 characters' ],
+          ogrn: [ val => isNaN(val) === false || 'Ogrn: there should be only numbers',
+                  val => val.length === 13 || 'Ogrn: must be 13 characters' ]
         }
       }
     },
@@ -43,49 +45,24 @@
     methods: {
       getLegalForms() {
         this.$backend.organizations.legal_forms()
-          .then(response => {
-            this.legal_forms = response.data
-          })
-      },
-      checkName(name) {
-        return name.length >= 5
-      },
-      checkLegalForm(legal_form) {
-        return legal_form.length >= 0
-      },
-      checkInn(inn) {
-        let regex = /^\d+$/
-        return regex.test(String(inn))
-      },
-      checkOgrn(ogrn) {
-        let regex = /^\d+$/
-        return regex.test(String(ogrn))
+          .then(response => { this.legal_forms = response.data })
       },
       clearErrors() {
-        this.errors = {}
-        this.errors.name = []
-        this.errors.legal_form = []
-        this.errors.inn = []
-        this.errors.ogrn = []
-      },
-      invalidParams() {
-        let errorsCount = 0
-        Object.keys(this.errors).forEach(key => { errorsCount = errorsCount + this.errors[key].length })
-        return errorsCount > 0
-      },
-      isInvalidField(name) {
-        return this.errors[name].length > 0
-      },
-      fieldError(name) {
-        return this.errors[name][0]
+        this.$refs.name.resetValidation()
+        this.$refs.legal_form.resetValidation()
+        this.$refs.inn.resetValidation()
+        this.$refs.ogrn.resetValidation()
       },
       onSubmit() {
         this.clearErrors()
-        if (!this.checkName(this.organization.name)) { this.errors.name.push('Name: must be at least 5 characters') }
-        if (!this.checkLegalForm(this.organization.legal_form)) { this.errors.legal_form.push('Legal form: must be filled') }
-        if (!this.checkInn(this.organization.inn)) { this.errors.inn.push('Inn: there should be only numbers') }
-        if (!this.checkOgrn(this.organization.ogrn)) { this.errors.ogrn.push('Ogrn: there should be only numbers') }
-        if (!this.invalidParams()) {
+        this.$refs.name.validate()
+        this.$refs.legal_form.validate()
+        this.$refs.inn.validate()
+        this.$refs.ogrn.validate()
+        if (this.$refs.name.hasError || this.$refs.legal_form.hasError || this.$refs.inn.hasError || this.$refs.ogrn.hasError) {
+          this.formHasError = true
+        }
+        else {
           this.$backend.organizations.create(this.organization)
             .then(response => {
               this.organization = {}
@@ -93,9 +70,11 @@
               this.$emit('new-organization', response.data)
             })
             .catch((error) => {
-              //console.log(error, error.response.data)
               let responseErrors = error.response.data
-              Object.keys(responseErrors).forEach(key => { this.errors[key] = responseErrors[key] })
+              Object.keys(responseErrors).forEach(key => {
+                let fieldRef = this.$refs[key]
+                fieldRef.innerError = true
+                fieldRef.innerErrorMessage = responseErrors[key] })
               this.$forceUpdate()
             })
         }
@@ -103,10 +82,3 @@
     }
   }
 </script>
-
-<style lang="scss">
-  span.error {
-    font-size: 15px;
-    color: red;
-  }
-</style>
