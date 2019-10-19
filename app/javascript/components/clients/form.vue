@@ -3,22 +3,24 @@
     h6 Create new client
     q-form(@submit.prevent="onSubmit" class="q-gutter-md")
       .control
-        q-input(outlined id="fullname" type="text" v-model="client.fullname" label="Full name" stack-label)
-        span.error(v-if="isInvalidField('fullname')" ) {{ fieldError('fullname') }}
+        q-input(outlined ref="fullname" v-model="client.fullname" label="Full name" stack-label
+          lazy-rules :rules="rules.fullname")
       .control
-        q-input(outlined id="email" type="email" v-model="client.email" label="Email" stack-label)
-        span.error(v-if="isInvalidField('email')" ) {{ fieldError('email') }}
+        q-input(outlined ref="email" type="email" v-model="client.email" label="Email" stack-label
+          lazy-rules :rules="rules.email")
       .control
-        q-input(outlined id="phone" type="text" v-model="client.phone" label="Phone" stack-label)
-        span.error(v-if="isInvalidField('phone')" ) {{ fieldError('phone') }}
+        q-input(outlined ref="phone" v-model="client.phone" label="Phone" stack-label
+          lazy-rules :rules="rules.phone")
       .control
-        q-input(outlined id="password" type="text" v-model="client.password" label="Password" stack-label)
-        span.error(v-if="isInvalidField('password')" ) {{ fieldError('password') }}
+        q-input(outlined ref="password" type="text" v-model="client.password" label="Password" stack-label
+          lazy-rules :rules="rules.password")
       .action
         q-btn(type="submit") Add client
 </template>
 
 <script>
+  let emailRegex = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,})$/
+
   export default {
     data: function () {
       return {
@@ -28,54 +30,31 @@
           phone: '',
           password: ''
         },
-        errors: {
-          fullname: [],
-          email: [],
-          phone: [],
-          password: []
+        rules: {
+          fullname: [ val => val && val.length >= 5 || 'Fullname: must be at least 5 characters'],
+          email: [ val => emailRegex.test(String(val)) === true || 'Email: wrong format'],
+          phone: [ val => isNaN(val) === false || 'Phone: there should be only numbers'],
+          password: [val => val && val.length >= 8 || 'Password: must be at least 8 characters']
         }
       }
     },
     methods: {
-      checkFullname(fullname) {
-        return fullname.length >= 5
-      },
-      checkEmail(email) {
-        let regex = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,})$/
-        return regex.test(String(email))
-      },
-      checkPhone(phone) {
-        let regex = /^\d+$/
-        return regex.test(String(phone))
-      },
-      checkPassword(password) {
-        return password.length >= 8
-      },
       clearErrors() {
-        this.errors = {}
-        this.errors.fullname = []
-        this.errors.email = []
-        this.errors.phone = []
-        this.errors.password = []
-      },
-      invalidParams() {
-        let errorsCount = 0
-        Object.keys(this.errors).forEach(key => { errorsCount = errorsCount + this.errors[key].length })
-        return errorsCount > 0
-      },
-      isInvalidField(name) {
-        return this.errors[name].length > 0
-      },
-      fieldError(name) {
-        return this.errors[name][0]
+        this.$refs.fullname.resetValidation()
+        this.$refs.email.resetValidation()
+        this.$refs.phone.resetValidation()
+        this.$refs.password.resetValidation()
       },
       onSubmit() {
         this.clearErrors()
-        if (!this.checkFullname(this.client.fullname)) { this.errors.fullname.push('Fullname: must be at least 5 characters') }
-        if (!this.checkEmail(this.client.email)) { this.errors.email.push('Email: wrong format') }
-        if (!this.checkPhone(this.client.phone)) { this.errors.phone.push('Phone: there should be only numbers') }
-        if (!this.checkPassword(this.client.password)) { this.errors.password.push('Password: must be at least 8 characters') }
-        if (!this.invalidParams()) {
+        this.$refs.fullname.validate()
+        this.$refs.email.validate()
+        this.$refs.phone.validate()
+        this.$refs.password.validate()
+        if (this.$refs.fullname.hasError || this.$refs.email.hasError || this.$refs.phone.hasError || this.$refs.password.hasError) {
+          this.formHasError = true
+        }
+        else {
           this.$backend.staffs.createClient(this.client)
             .then(response => {
               this.client = {}
@@ -83,9 +62,11 @@
               this.$emit('new-client', response.data)
             })
             .catch((error) => {
-              //console.log(error, error.response.data)
               let responseErrors = error.response.data
-              Object.keys(responseErrors).forEach(key => { this.errors[key] = responseErrors[key] })
+              Object.keys(responseErrors).forEach(key => {
+                let fieldRef = this.$refs[key]
+                fieldRef.innerError = true
+                fieldRef.innerErrorMessage = responseErrors[key] })
               this.$forceUpdate()
             })
         }
@@ -93,10 +74,3 @@
     }
   }
 </script>
-
-<style lang="scss">
-  span.error {
-    font-size: 15px;
-    color: red;
-  }
-</style>
