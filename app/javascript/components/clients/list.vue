@@ -1,5 +1,12 @@
 <template lang="pug">
-  q-table(dense title="List of clients" :data="clients" :columns="columns" row-key="name" :pagination.sync="pagination")
+  q-table(
+    dense
+    title="List of clients"
+    :data="clients"
+    :columns="columns"
+    row-key="name"
+    :pagination.sync="pagination"
+    separator="cell")
 </template>
 
 <script>

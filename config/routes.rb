@@ -10,11 +10,15 @@ Rails.application.routes.draw do
     resources :clients, only: %i[index create], shallow: true
     resources :organizations, only: %i[index create destroy], shallow: true
     get '/organizations/legal_forms', as: :legal_forms
+
+    get '*slug', to: 'application#index'
   end
 
   namespace :clients do
     root 'application#index'
     get '/user', to: 'application#user', as: :user
+
+    get '*slug', to: 'application#index'
   end
 
   namespace :api do
@@ -23,4 +27,6 @@ Rails.application.routes.draw do
       mount_devise_token_auth_for 'Client', at: 'client_auth', skip: %i[registrations]
     end
   end
+
+  get '*slug', to: 'home#index'
 end

@@ -24,7 +24,12 @@ import {
     QTab,
     QForm,
     QInput,
+    QScrollArea,
+    QList,
+    QItem,
+    QItemSection,
     QSelect,
+    QSeparator,
     QSpinnerHourglass
 } from 'quasar'
 
@@ -47,7 +52,12 @@ Vue.use(Quasar, {
         QTab,
         QForm,
         QInput,
+        QScrollArea,
+        QList,
+        QItem,
+        QItemSection,
         QSelect,
+        QSeparator,
         QSpinnerHourglass
     },
     directives: {

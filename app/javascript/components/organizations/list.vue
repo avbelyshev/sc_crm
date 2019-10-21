@@ -1,5 +1,12 @@
 <template lang="pug">
-  q-table(dense title="List of organizations" :data="organizations" :columns="columns" row-key="id" :pagination.sync="pagination")
+  q-table(
+    dense
+    title="List of organizations"
+    :data="organizations"
+    :columns="columns"
+    row-key="id"
+    :pagination.sync="pagination"
+    separator="cell")
     template(slot="body-cell-action" slot-scope="props" :props="props")
       q-td(:props="props")
         q-btn(outline color="negative" icon="fas fa-times" @click="onDelete(props.row)")

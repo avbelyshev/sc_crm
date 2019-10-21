@@ -2,11 +2,11 @@
   #app
     q-layout(view='hHh Lpr fFf' class="bg-grey-1")
       navbar(:user="user")
-      //q-tabs(v-model="tab" class="text-white shadow-2")
-        q-tab(name="clients" label="Clients")
-        q-tab(name="organizations" label="Organizations")
+      dashboard
       q-page-container
-        dashboard
+        q-page
+          transition
+            router-view
 </template>
 
 <script>
@@ -16,8 +16,7 @@
   export default {
     data: function () {
       return {
-        user: {},
-        tab: 'clients'
+        user: {}
       }
     },
     created() {
@@ -26,12 +25,8 @@
     methods: {
       fetchUser() {
         this.$backend.staffs.user()
-          .then(response => {
-            this.user = response.data.user
-          })
-          .catch(error => {
-            console.log(error)
-          })
+          .then(response => { this.user = response.data.user })
+          .catch(error => { console.log(error) })
       }
     },
     components: {

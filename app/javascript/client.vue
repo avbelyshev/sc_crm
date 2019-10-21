@@ -20,12 +20,8 @@
     methods: {
       fetchUser() {
         this.$backend.clients.user()
-          .then(response => {
-            this.user = response.data.user
-          })
-          .catch(error => {
-            console.log(error)
-          })
+          .then(response => { this.user = response.data.user })
+          .catch(error => { console.log(error) })
       }
     },
     components: {
