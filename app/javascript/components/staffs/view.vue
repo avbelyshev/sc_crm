@@ -4,39 +4,39 @@
       div.flex.justify-center(v-if="loading")
         q-spinner-hourglass(color="primary" size="8em" :thickness="10")
       div(v-else)
-        ClientsList(:clients="clients")
+        StaffsList(:staffs="staffs")
       q-separator(vertical)
     .col-lg-3.q-pa-md
-      ClientForm(@new-client="addNewClient")
+      StaffForm(@new-staff="addNewStaff")
 </template>
 
 <script>
-  import ClientsList from './list.vue'
-  import ClientForm from './form.vue'
+  import StaffsList from './list.vue'
+  import StaffForm from './form.vue'
 
   export default {
     data() {
       return {
         loading: true,
-        clients: []
+        staffs: []
       }
     },
     created() {
-      this.fetchClients()
+      this.fetchStaffs()
     },
     methods: {
-      fetchClients() {
-        this.$backend.clients.index()
-          .then(response => { this.clients = response.data })
+      fetchStaffs() {
+        this.$backend.staffs.index()
+          .then(response => { this.staffs = response.data })
           .finally(() => this.loading = false)
       },
-      addNewClient(client) {
-        this.clients.push(client)
+      addNewStaff(staff) {
+        this.staffs.push(staff)
       }
     },
     components: {
-      ClientsList,
-      ClientForm
+      StaffsList,
+      StaffForm
     }
   }
 </script>

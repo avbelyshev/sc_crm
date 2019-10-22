@@ -1,8 +1,8 @@
 <template lang="pug">
   q-table(
     dense
-    title="List of clients"
-    :data="clients"
+    title="List of staffs"
+    :data="staffs"
     :columns="columns"
     row-key="name"
     :pagination.sync="pagination"
@@ -15,7 +15,7 @@
 <script>
   export default {
     props: {
-      clients: {
+      staffs: {
         type: Array,
         required: true
       }
@@ -38,8 +38,8 @@
     methods: {
       onDelete(row) {
         if (!confirm('You definitely want to delete the entry?')) { return }
-        this.$backend.clients.destroy(row.id)
-          .then(() => { this.clients.splice(row.__index, 1) })
+        this.$backend.staffs.destroy(row.id)
+          .then(() => { this.staffs.splice(row.__index, 1) })
           .catch(error => { console.log(error) })
       }
     }

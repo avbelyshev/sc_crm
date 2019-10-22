@@ -1,21 +1,21 @@
 <template lang="pug">
   .container
-    h6 Create new client
+    h6 Create new staff
     q-form(@submit.prevent="onSubmit" class="q-gutter-md")
       .control
-        q-input(outlined ref="fullname" v-model="client.fullname" label="Full name" stack-label
+        q-input(outlined ref="fullname" v-model="staff.fullname" label="Full name" stack-label
           lazy-rules :rules="rules.fullname")
       .control
-        q-input(outlined ref="email" type="email" v-model="client.email" label="Email" stack-label
+        q-input(outlined ref="email" type="email" v-model="staff.email" label="Email" stack-label
           lazy-rules :rules="rules.email")
       .control
-        q-input(outlined ref="phone" v-model="client.phone" label="Phone" stack-label
+        q-input(outlined ref="phone" v-model="staff.phone" label="Phone" stack-label
           lazy-rules :rules="rules.phone")
       .control
-        q-input(outlined ref="password" type="text" v-model="client.password" label="Password" stack-label
+        q-input(outlined ref="password" type="text" v-model="staff.password" label="Password" stack-label
           lazy-rules :rules="rules.password")
       .action
-        q-btn(type="submit") Add client
+        q-btn(type="submit") Add staff
 </template>
 
 <script>
@@ -24,7 +24,7 @@
   export default {
     data: function () {
       return {
-        client: {
+        staff: {
           fullname: '',
           email: '',
           phone: '',
@@ -55,11 +55,11 @@
           this.formHasError = true
         }
         else {
-          this.$backend.clients.create(this.client)
+          this.$backend.staffs.create(this.staff)
             .then(response => {
-              this.client = {}
+              this.staff = {}
               this.clearErrors()
-              this.$emit('new-client', response.data)
+              this.$emit('new-staff', response.data)
             })
             .catch((error) => {
               let responseErrors = error.response.data

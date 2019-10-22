@@ -7,9 +7,11 @@ Rails.application.routes.draw do
   namespace :staffs do
     root 'application#index'
     get '/user', to: 'application#user', as: :user
-    resources :clients, only: %i[index create], shallow: true
-    resources :organizations, only: %i[index create destroy], shallow: true
     get '/organizations/legal_forms', as: :legal_forms
+
+    resources :staffs, only: %i[index create update destroy], shallow: true
+    resources :clients, only: %i[index create update destroy], shallow: true
+    resources :organizations, only: %i[index create update destroy], shallow: true
 
     get '*slug', to: 'application#index'
   end

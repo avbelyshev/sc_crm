@@ -13,15 +13,22 @@ const adapter = axios.create({
 const backend = {
   staffs: {
     user: () => adapter.get('/staffs/user'),
-    clientsList: () => adapter.get('/staffs/clients'),
-    createClient: (params) => adapter.post('/staffs/clients', params)
+    index: () => adapter.get('/staffs/staffs'),
+    create: (params) => adapter.post('/staffs/staffs', params),
+    update: (id, params) => adapter.patch(`/staffs/staffs/${id}`, params),
+    destroy: (id) => adapter.delete(`/staffs/staffs/${id}`),
   },
   clients: {
-    user: () => adapter.get('/clients/user')
+    user: () => adapter.get('/clients/user'),
+    index: () => adapter.get('/staffs/clients'),
+    create: (params) => adapter.post('/staffs/clients', params),
+    update: (id, params) => adapter.patch(`/staffs/clients/${id}`, params),
+    destroy: (id) => adapter.delete(`/staffs/clients/${id}`),
   },
   organizations: {
     index: () => adapter.get('/staffs/organizations'),
     create: (params) => adapter.post('/staffs/organizations', params),
+    update: (id, params) => adapter.patch(`/staffs/organizations/${id}`, params),
     destroy: (id) => adapter.delete(`/staffs/organizations/${id}`),
     legal_forms: () => adapter.get('/staffs/organizations/legal_forms'),
   }

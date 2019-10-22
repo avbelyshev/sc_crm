@@ -40,12 +40,8 @@
       onDelete(row) {
         if (!confirm('You definitely want to delete the entry?')) { return }
         this.$backend.organizations.destroy(row.id)
-          .then(() => {
-            this.organizations.splice(row.__index, 1)
-          })
-          .catch(error => {
-            console.log(error)
-          })
+          .then(() => { this.organizations.splice(row.__index, 1) })
+          .catch(error => { console.log(error) })
         }
     }
   }
