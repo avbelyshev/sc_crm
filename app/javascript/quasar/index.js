@@ -11,6 +11,7 @@ import {
     QLayout,
     QHeader,
     QDrawer,
+    QDialog,
     QPageContainer,
     QPage,
     QToolbar,
@@ -30,7 +31,11 @@ import {
     QItemSection,
     QSelect,
     QSeparator,
-    QSpinnerHourglass
+    QSpinnerHourglass,
+    QCard,
+    QCardSection,
+    QCardActions,
+    ClosePopup
 } from 'quasar'
 
 Vue.use(Quasar, {
@@ -39,6 +44,7 @@ Vue.use(Quasar, {
         QLayout,
         QHeader,
         QDrawer,
+        QDialog,
         QPageContainer,
         QPage,
         QToolbar,
@@ -58,9 +64,13 @@ Vue.use(Quasar, {
         QItemSection,
         QSelect,
         QSeparator,
-        QSpinnerHourglass
+        QSpinnerHourglass,
+        QCard,
+        QCardSection,
+        QCardActions
     },
     directives: {
+        ClosePopup
     },
     iconSet: iconSet,
     plugins: {

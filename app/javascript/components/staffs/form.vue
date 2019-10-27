@@ -1,6 +1,5 @@
 <template lang="pug">
   .container
-    h6 Create new staff
     q-form(@submit.prevent="onSubmit" class="q-gutter-md")
       .control
         q-input(outlined ref="fullname" v-model="staff.fullname" label="Full name" stack-label
@@ -15,13 +14,18 @@
         q-input(outlined ref="password" type="text" v-model="staff.password" label="Password" stack-label
           lazy-rules :rules="rules.password")
       .action
-        q-btn(type="submit") Add staff
+        q-btn(type="submit") {{ id ? "Edit staff" : "Add staff" }}
 </template>
 
 <script>
   let emailRegex = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,})$/
 
   export default {
+    props: {
+      id: {
+        type: Number
+      }
+    },
     data: function () {
       return {
         staff: {
@@ -38,7 +42,18 @@
         }
       }
     },
+    created() {
+      this.fillFormFields(this.id)
+    },
     methods: {
+      fetchStaff(id) {
+        this.$backend.staffs.edit(id)
+          .then(response => { this.staff = response.data })
+      },
+      fillFormFields(id) {
+        if (!id) { return }
+        this.fetchStaff(this.id)
+      },
       clearErrors() {
         this.$refs.fullname.resetValidation()
         this.$refs.email.resetValidation()
@@ -53,23 +68,41 @@
         this.$refs.password.validate()
         if (this.$refs.fullname.hasError || this.$refs.email.hasError || this.$refs.phone.hasError || this.$refs.password.hasError) {
           this.formHasError = true
+        } else {
+          if (this.id) { this.updateStaff() }
+          else { this.createStaff() }
         }
-        else {
-          this.$backend.staffs.create(this.staff)
-            .then(response => {
-              this.staff = {}
-              this.clearErrors()
-              this.$emit('new-staff', response.data)
-            })
-            .catch((error) => {
-              let responseErrors = error.response.data
-              Object.keys(responseErrors).forEach(key => {
-                let fieldRef = this.$refs[key]
-                fieldRef.innerError = true
-                fieldRef.innerErrorMessage = responseErrors[key] })
-              this.$forceUpdate()
-            })
-        }
+      },
+      createStaff() {
+        this.$backend.staffs.create(this.staff)
+          .then(response => {
+            this.staff = {}
+            this.clearErrors()
+            this.$emit('new-staff', response.data)
+          })
+          .catch((error) => {
+            this.fillBackendErrors(error.response.data)
+            this.$forceUpdate()
+          })
+      },
+      updateStaff() {
+        this.$backend.staffs.update(this.id, this.staff)
+          .then(response => {
+            this.staff = {}
+            this.clearErrors()
+            this.$emit('update-staff', response.data)
+          })
+          .catch((error) => {
+            this.fillBackendErrors(error.response.data)
+            this.$forceUpdate()
+          })
+      },
+      fillBackendErrors(responseErrors) {
+        Object.keys(responseErrors).forEach(key => {
+          let fieldRef = this.$refs[key]
+          fieldRef.innerError = true
+          fieldRef.innerErrorMessage = responseErrors[key]
+        })
       }
     }
   }

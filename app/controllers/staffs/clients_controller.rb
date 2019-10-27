@@ -1,6 +1,6 @@
 class Staffs::ClientsController < ApplicationController
   before_action :authenticate_staff!
-  before_action :set_client, only: %i[update destroy]
+  before_action :set_client, only: %i[edit update destroy]
 
   def index
     @clients = Client.all
@@ -15,6 +15,8 @@ class Staffs::ClientsController < ApplicationController
       render json: @client.errors, status: :unprocessable_entity
     end
   end
+
+  def edit; end
 
   def update
     if @client.update(client_params)

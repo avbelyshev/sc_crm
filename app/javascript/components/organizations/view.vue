@@ -5,10 +5,11 @@
         q-spinner-hourglass(color="primary" size="8em" :thickness="10")
       div(v-else)
         OrganizationsList(:organizations="organizations")
-      q-separator(vertical)
+    q-separator(vertical)
     .col-lg-3.q-pa-md
+      h6 Create new organization
       OrganizationForm(@new-organization="addNewOrganization")
-    div
+    router-view(@update-organization-row="updateOrganizationRow")
 </template>
 
 <script>
@@ -33,6 +34,10 @@
       },
       addNewOrganization(organization) {
         this.organizations.push(organization)
+      },
+      updateOrganizationRow(organization) {
+        let index = this.organizations.findIndex(item => item.id == organization.id)
+        this.organizations.splice(index, 1, organization)
       }
     },
     components: {

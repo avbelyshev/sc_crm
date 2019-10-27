@@ -5,9 +5,11 @@
         q-spinner-hourglass(color="primary" size="8em" :thickness="10")
       div(v-else)
         ClientsList(:clients="clients")
-      q-separator(vertical)
+    q-separator(vertical)
     .col-lg-3.q-pa-md
+      h6 Create new client
       ClientForm(@new-client="addNewClient")
+    router-view(@update-client-row="updateClientRow")
 </template>
 
 <script>
@@ -32,6 +34,10 @@
       },
       addNewClient(client) {
         this.clients.push(client)
+      },
+      updateClientRow(client) {
+        let index = this.clients.findIndex(item => item.id == client.id)
+        this.clients.splice(index, 1, client)
       }
     },
     components: {

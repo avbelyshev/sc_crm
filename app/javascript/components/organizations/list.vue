@@ -9,6 +9,7 @@
     separator="cell")
     template(slot="body-cell-action" slot-scope="props" :props="props")
       q-td(:props="props")
+        q-btn(outline color="info" icon="fas fa-marker" :to="{ name: 'OrganizationEdit', params: { id: props.row.id } }")
         q-btn(outline color="negative" icon="fas fa-times" @click="onDelete(props.row)")
 </template>
 

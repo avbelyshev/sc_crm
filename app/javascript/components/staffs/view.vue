@@ -5,9 +5,11 @@
         q-spinner-hourglass(color="primary" size="8em" :thickness="10")
       div(v-else)
         StaffsList(:staffs="staffs")
-      q-separator(vertical)
+    q-separator(vertical)
     .col-lg-3.q-pa-md
+      h6 Create new staff
       StaffForm(@new-staff="addNewStaff")
+    router-view(@update-staff-row="updateStaffRow")
 </template>
 
 <script>
@@ -32,6 +34,10 @@
       },
       addNewStaff(staff) {
         this.staffs.push(staff)
+      },
+      updateStaffRow(staff) {
+        let index = this.staffs.findIndex(item => item.id == staff.id)
+        this.staffs.splice(index, 1, staff)
       }
     },
     components: {

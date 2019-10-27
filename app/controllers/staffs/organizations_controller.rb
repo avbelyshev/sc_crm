@@ -1,6 +1,6 @@
 class Staffs::OrganizationsController < ApplicationController
   before_action :authenticate_staff!
-  before_action :set_organization, only: %i[update destroy]
+  before_action :set_organization, only: %i[edit update destroy]
 
   def index
     @organizations = Organization.all
@@ -15,6 +15,8 @@ class Staffs::OrganizationsController < ApplicationController
       render json: @organization.errors, status: :unprocessable_entity
     end
   end
+
+  def edit; end
 
   def update
     if @organization.update(organization_params)

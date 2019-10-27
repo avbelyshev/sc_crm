@@ -1,6 +1,6 @@
 class Staffs::StaffsController < ApplicationController
   before_action :authenticate_staff!
-  before_action :set_staff, only: %i[update destroy]
+  before_action :set_staff, only: %i[edit update destroy]
 
   def index
     @staffs = Staff.all
@@ -15,6 +15,8 @@ class Staffs::StaffsController < ApplicationController
       render json: @staff.errors, status: :unprocessable_entity
     end
   end
+
+  def edit; end
 
   def update
     if @staff.update(staff_params)
