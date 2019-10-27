@@ -8,6 +8,8 @@
           q-item-section Clients
         q-item(clickable :to="{ name: 'Organizations' }")
           q-item-section Organizations
+        q-item(clickable :to="{ name: 'Equipments' }")
+          q-item-section Equipments
 </template>
 
 <script>

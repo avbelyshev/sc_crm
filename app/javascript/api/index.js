@@ -34,6 +34,14 @@ const backend = {
     update: (id, params) => adapter.patch(`/staffs/organizations/${id}`, params),
     destroy: (id) => adapter.delete(`/staffs/organizations/${id}`),
     legal_forms: () => adapter.get('/staffs/organizations/legal_forms'),
+  },
+  equipments: {
+    index: () => adapter.get('/staffs/equipments'),
+    create: (params) => adapter.post('/staffs/equipments', params),
+    edit: (id) => adapter.get(`/staffs/equipments/${id}/edit`),
+    update: (id, params) => adapter.patch(`/staffs/equipments/${id}`, params),
+    destroy: (id) => adapter.delete(`/staffs/equipments/${id}`),
+    kinds: () => adapter.get('/staffs/equipments/kinds'),
   }
 }
 

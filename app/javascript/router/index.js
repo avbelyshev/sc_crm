@@ -4,6 +4,7 @@ import VueRouter from 'vue-router'
 const Staffs = () => import('../components/staffs/view.vue')
 const Clients = () => import('../components/clients/view.vue')
 const Organizations = () => import('../components/organizations/view.vue')
+const Equipments = () => import('../components/equipments/view.vue')
 
 Vue.use(VueRouter)
 
@@ -39,6 +40,16 @@ export default new VueRouter({
           name: 'OrganizationEdit',
           path: '/organizations/:id/edit',
           component: () => import('../components/organizations/edit.vue')
+        }
+      ]
+    },
+    {
+      name: 'Equipments', path: '/equipments', component: Equipments,
+      children: [
+        {
+          name: 'EquipmentEdit',
+          path: '/equipments/:id/edit',
+          component: () => import('../components/equipments/edit.vue')
         }
       ]
     }

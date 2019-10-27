@@ -8,10 +8,12 @@ Rails.application.routes.draw do
     root 'application#index'
     get '/user', to: 'application#user', as: :user
     get '/organizations/legal_forms', as: :legal_forms
+    get '/equipments/kinds', as: :kinds
 
     resources :staffs, only: %i[index create edit update destroy], shallow: true
     resources :clients, only: %i[index create edit update destroy], shallow: true
     resources :organizations, only: %i[index create edit update destroy], shallow: true
+    resources :equipments, only: %i[index create edit update destroy], shallow: true
 
     get '*slug', to: 'application#index'
   end
