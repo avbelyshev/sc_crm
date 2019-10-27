@@ -10,11 +10,12 @@
       .control
         q-input(outlined ref="phone" v-model="staff.phone" label="Phone" stack-label
           lazy-rules :rules="rules.phone")
-      .control
+      .control(v-if="viewPassword")
         q-input(outlined ref="password" type="text" v-model="staff.password" label="Password" stack-label
           lazy-rules :rules="rules.password")
       .action
         q-btn(type="submit") {{ id ? "Edit staff" : "Add staff" }}
+        q-btn(v-if="id" @click="passwordVisible") Password
 </template>
 
 <script>
@@ -39,13 +40,19 @@
           email: [ val => emailRegex.test(String(val)) === true || 'Email: wrong format'],
           phone: [ val => isNaN(val) === false || 'Phone: there should be only numbers'],
           password: [val => val && val.length >= 8 || 'Password: must be at least 8 characters']
-        }
+        },
+        viewPassword: false
       }
     },
     created() {
+      if (!this.id) { this.viewPassword = true }
       this.fillFormFields(this.id)
     },
     methods: {
+      passwordVisible() {
+        if (this.viewPassword) { this.viewPassword = false }
+        else { this.viewPassword = true }
+      },
       fetchStaff(id) {
         this.$backend.staffs.edit(id)
           .then(response => { this.staff = response.data })
@@ -58,15 +65,19 @@
         this.$refs.fullname.resetValidation()
         this.$refs.email.resetValidation()
         this.$refs.phone.resetValidation()
-        this.$refs.password.resetValidation()
+        if (this.viewPassword) { this.$refs.password.resetValidation() }
       },
       onSubmit() {
         this.clearErrors()
         this.$refs.fullname.validate()
         this.$refs.email.validate()
         this.$refs.phone.validate()
-        this.$refs.password.validate()
-        if (this.$refs.fullname.hasError || this.$refs.email.hasError || this.$refs.phone.hasError || this.$refs.password.hasError) {
+        let passwordError = false
+        if (this.viewPassword) {
+          this.$refs.password.validate()
+          passwordError = this.$refs.password.hasError
+        }
+        if (this.$refs.fullname.hasError || this.$refs.email.hasError || this.$refs.phone.hasError || passwordError) {
           this.formHasError = true
         } else {
           if (this.id) { this.updateStaff() }
