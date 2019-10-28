@@ -14,6 +14,7 @@ Rails.application.routes.draw do
     resources :clients, only: %i[index create edit update destroy], shallow: true
     resources :organizations, only: %i[index create edit update destroy], shallow: true
     resources :equipments, only: %i[index create edit update destroy], shallow: true
+    resources :clients_organizations, only: [:create], shallow: true
 
     get '*slug', to: 'application#index'
   end

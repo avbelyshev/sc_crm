@@ -42,6 +42,9 @@ const backend = {
     update: (id, params) => adapter.patch(`/staffs/equipments/${id}`, params),
     destroy: (id) => adapter.delete(`/staffs/equipments/${id}`),
     kinds: () => adapter.get('/staffs/equipments/kinds'),
+  },
+  clients_organizations: {
+    create: (params) => adapter.post('/staffs/clients_organizations', params),
   }
 }
 
