@@ -1,7 +1,6 @@
 <template lang="pug">
   .container
-    h6 Create new organization
-    q-form(@submit.prevent="onSubmit" class="q-gutter-md")
+    q-form(ref="organizationForm" @submit.prevent="onSubmit" class="q-gutter-md")
       .control
         q-input(outlined ref="name" v-model="organization.name" label="Name" stack-label
           lazy-rules :rules="rules.name")
@@ -15,11 +14,16 @@
         q-input(outlined ref="ogrn" v-model="organization.ogrn" label="Ogrn" stack-label
           lazy-rules :rules="rules.ogrn")
       .action
-        q-btn(type="submit") Add organization
+        q-btn(type="submit") {{ id ? "Edit organization" : "Add organization" }}
 </template>
 
 <script>
   export default {
+    props: {
+      id: {
+        type: Number
+      }
+    },
     data: function () {
       return {
         organization: {
@@ -41,43 +45,60 @@
     },
     created() {
       this.getLegalForms()
+      this.fillFormFields(this.id)
     },
     methods: {
       getLegalForms() {
         this.$backend.organizations.legal_forms()
           .then(response => { this.legal_forms = response.data })
       },
-      clearErrors() {
-        this.$refs.name.resetValidation()
-        this.$refs.legal_form.resetValidation()
-        this.$refs.inn.resetValidation()
-        this.$refs.ogrn.resetValidation()
+      fetchOrganization(id) {
+        this.$backend.organizations.edit(id)
+          .then(response => { this.organization = response.data })
+      },
+      fillFormFields(id) {
+        if (!id) { return }
+        this.fetchOrganization(this.id)
       },
       onSubmit() {
-        this.clearErrors()
-        this.$refs.name.validate()
-        this.$refs.legal_form.validate()
-        this.$refs.inn.validate()
-        this.$refs.ogrn.validate()
-        if (this.$refs.name.hasError || this.$refs.legal_form.hasError || this.$refs.inn.hasError || this.$refs.ogrn.hasError) {
-          this.formHasError = true
-        }
-        else {
-          this.$backend.organizations.create(this.organization)
-            .then(response => {
-              this.organization = {}
-              this.clearErrors()
-              this.$emit('new-organization', response.data)
-            })
-            .catch((error) => {
-              let responseErrors = error.response.data
-              Object.keys(responseErrors).forEach(key => {
-                let fieldRef = this.$refs[key]
-                fieldRef.innerError = true
-                fieldRef.innerErrorMessage = responseErrors[key] })
-              this.$forceUpdate()
-            })
-        }
+        this.$refs.organizationForm.resetValidation()
+        this.$refs.organizationForm.validate().then(success => {
+          if (success) {
+            if (this.id) { this.updateOrganization() }
+            else { this.createOrganization() }
+          }
+        })
+      },
+      createOrganization() {
+        this.$backend.organizations.create(this.organization)
+          .then(response => {
+            this.organization = {}
+            this.$refs.organizationForm.resetValidation()
+            this.$emit('new-organization', response.data)
+          })
+          .catch((error) => {
+            this.fillBackendErrors(error.response.data)
+            this.$forceUpdate()
+          })
+      },
+      updateOrganization() {
+        this.$backend.organizations.update(this.id, this.organization)
+          .then(response => {
+            this.organization = {}
+            this.$refs.organizationForm.resetValidation()
+            this.$emit('update-organization', response.data)
+          })
+          .catch((error) => {
+            this.fillBackendErrors(error.response.data)
+            this.$forceUpdate()
+          })
+      },
+      fillBackendErrors(responseErrors) {
+        Object.keys(responseErrors).forEach(key => {
+          let fieldRef = this.$refs[key]
+          fieldRef.innerError = true
+          fieldRef.innerErrorMessage = responseErrors[key]
+        })
       }
     }
   }
