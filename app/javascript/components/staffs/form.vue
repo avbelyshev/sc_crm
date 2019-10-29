@@ -1,6 +1,6 @@
 <template lang="pug">
   .container
-    q-form(@submit.prevent="onSubmit" class="q-gutter-md")
+    q-form(ref="staffForm" @submit.prevent="onSubmit" class="q-gutter-md")
       .control
         q-input(outlined ref="fullname" v-model="staff.fullname" label="Full name" stack-label
           lazy-rules :rules="rules.fullname")
@@ -61,34 +61,20 @@
         if (!id) { return }
         this.fetchStaff(this.id)
       },
-      clearErrors() {
-        this.$refs.fullname.resetValidation()
-        this.$refs.email.resetValidation()
-        this.$refs.phone.resetValidation()
-        if (this.viewPassword) { this.$refs.password.resetValidation() }
-      },
       onSubmit() {
-        this.clearErrors()
-        this.$refs.fullname.validate()
-        this.$refs.email.validate()
-        this.$refs.phone.validate()
-        let passwordError = false
-        if (this.viewPassword) {
-          this.$refs.password.validate()
-          passwordError = this.$refs.password.hasError
-        }
-        if (this.$refs.fullname.hasError || this.$refs.email.hasError || this.$refs.phone.hasError || passwordError) {
-          this.formHasError = true
-        } else {
-          if (this.id) { this.updateStaff() }
-          else { this.createStaff() }
-        }
+        this.$refs.staffForm.resetValidation()
+        this.$refs.staffForm.validate().then(success => {
+          if (success) {
+            if (this.id) { this.updateStaff() }
+            else { this.createStaff() }
+          }
+        })
       },
       createStaff() {
         this.$backend.staffs.create(this.staff)
           .then(response => {
             this.staff = {}
-            this.clearErrors()
+            this.$refs.staffForm.resetValidation()
             this.$emit('new-staff', response.data)
           })
           .catch((error) => {
@@ -100,7 +86,7 @@
         this.$backend.staffs.update(this.id, this.staff)
           .then(response => {
             this.staff = {}
-            this.clearErrors()
+            this.$refs.staffForm.resetValidation()
             this.$emit('update-staff', response.data)
           })
           .catch((error) => {

@@ -1,6 +1,6 @@
 <template lang="pug">
   .container
-    q-form(@submit.prevent="onSubmit" class="q-gutter-md")
+    q-form(ref="equipmentForm" @submit.prevent="onSubmit" class="q-gutter-md")
       .control
         q-input(outlined ref="name" v-model="equipment.name" label="Name" stack-label
           lazy-rules :rules="rules.name")
@@ -11,9 +11,9 @@
         q-input(outlined ref="serial_number" v-model="equipment.serial_number" label="Serial number" stack-label
           lazy-rules :rules="rules.serial_number")
       .control
-        q-select(outlined ref="organization" v-model="equipment.organization_id" :options="organizations"
+        q-select(outlined ref="organization_id" v-model="equipment.organization_id" :options="organizations"
           option-value="id" option-label="name" emit-value map-options label="Organization" stack-label
-          lazy-rules :rules="rules.organization")
+          lazy-rules :rules="rules.organization_id")
       .action
         q-btn(type="submit") {{ id ? "Edit equipment" : "Add equipment" }}
 </template>
@@ -39,7 +39,7 @@
           name: [ val => val && val.length > 0 || 'Name must be filled'],
           kind: [ val => val && val.length > 0 || 'Kind must be filled'],
           serial_number: [ val => val && val.length > 0 || 'Serial number must be filled'],
-          organization: [ val => !!val || 'Organization must be filled']
+          organization_id: [ val => !!val || 'Organization must be filled']
         }
       }
     },
@@ -65,31 +65,20 @@
         if (!id) { return }
         this.fetchEquipment(this.id)
       },
-      clearErrors() {
-        this.$refs.name.resetValidation()
-        this.$refs.kind.resetValidation()
-        this.$refs.serial_number.resetValidation()
-        this.$refs.organization.resetValidation()
-      },
       onSubmit() {
-        this.clearErrors()
-        this.$refs.name.validate()
-        this.$refs.kind.validate()
-        this.$refs.serial_number.validate()
-        this.$refs.organization.validate()
-        if (this.$refs.name.hasError || this.$refs.kind.hasError || this.$refs.serial_number.hasError || this.$refs.organization.hasError) {
-          this.formHasError = true
-        }
-        else {
-          if (this.id) { this.updateEquipment() }
-          else { this.createEquipment() }
-        }
+        this.$refs.equipmentForm.resetValidation()
+        this.$refs.equipmentForm.validate().then(success => {
+          if (success) {
+            if (this.id) { this.updateEquipment() }
+            else { this.createEquipment() }
+          }
+        })
       },
       createEquipment() {
         this.$backend.equipments.create(this.equipment)
           .then(response => {
             this.equipment = {}
-            this.clearErrors()
+            this.$refs.equipmentForm.resetValidation()
             this.$emit('new-equipment', response.data)
           })
           .catch((error) => {
@@ -101,7 +90,7 @@
         this.$backend.equipments.update(this.id, this.equipment)
           .then(response => {
             this.equipment = {}
-            this.clearErrors()
+            this.$refs.equipmentForm.resetValidation()
             this.$emit('update-equipment', response.data)
           })
           .catch((error) => {

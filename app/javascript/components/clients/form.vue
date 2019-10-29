@@ -1,6 +1,6 @@
 <template lang="pug">
   .container
-    q-form(@submit.prevent="onSubmit" class="q-gutter-md")
+    q-form(ref="clientForm" @submit.prevent="onSubmit" class="q-gutter-md")
       .control
         q-input(outlined ref="fullname" v-model="client.fullname" label="Full name" stack-label
           lazy-rules :rules="rules.fullname")
@@ -13,7 +13,7 @@
       .control
         q-select(outlined multiple ref="organization_ids" v-model="client.organization_ids" :options="organizationsList"
           option-value="id" option-label="name" emit-value map-options label="Organizations" stack-label
-          lazy-rules :rules="rules.organization")
+          lazy-rules :rules="rules.organization_ids")
       .control(v-if="viewPassword")
         q-input(outlined ref="password" type="text" v-model="client.password" label="Password" stack-label
           lazy-rules :rules="rules.password")
@@ -43,8 +43,8 @@
         rules: {
           fullname: [ val => val && val.length >= 5 || 'Fullname: must be at least 5 characters'],
           email: [ val => emailRegex.test(String(val)) === true || 'Email: wrong format'],
-          phone: [ val => isNaN(val) === false || 'Phone: there should be only numbers'],
-          organizations: [ val => !!val || 'Organizations must be filled'],
+          phone: [ val => val && isNaN(val) === false || 'Phone: there should be only numbers'],
+          organization_ids: [ val => val && val.length > 0 || 'Organizations must be filled'],
           password: [val => val && val.length >= 8 || 'Password: must be at least 8 characters'],
         },
         organizationsList: [],
@@ -73,37 +73,20 @@
         if (!id) { return }
         this.fetchClient(this.id)
       },
-      clearErrors() {
-        this.$refs.fullname.resetValidation()
-        this.$refs.email.resetValidation()
-        this.$refs.phone.resetValidation()
-        this.$refs.organization_ids.resetValidation()
-        if (this.viewPassword) { this.$refs.password.resetValidation() }
-      },
       onSubmit() {
-        this.clearErrors()
-        this.$refs.fullname.validate()
-        this.$refs.email.validate()
-        this.$refs.phone.validate()
-        this.$refs.organization_ids.validate()
-        let passwordError = false
-        if (this.viewPassword) {
-          this.$refs.password.validate()
-          passwordError = this.$refs.password.hasError
-        }
-        if (this.$refs.fullname.hasError || this.$refs.email.hasError || this.$refs.phone.hasError|| this.$refs.organization_ids.hasError || passwordError) {
-          this.formHasError = true
-        }
-        else {
-          if (this.id) { this.updateClient() }
-          else { this.createClient() }
-        }
+        this.$refs.clientForm.resetValidation()
+        this.$refs.clientForm.validate().then(success => {
+          if (success) {
+            if (this.id) { this.updateClient() }
+            else { this.createClient() }
+          }
+        })
       },
       createClient() {
         this.$backend.clients.create(this.client)
           .then(response => {
             this.client = {}
-            this.clearErrors()
+            this.$refs.clientForm.resetValidation()
             this.$emit('new-client', response.data)
           })
           .catch((error) => {
@@ -115,7 +98,7 @@
         this.$backend.clients.update(this.id, this.client)
           .then(response => {
             this.client = {}
-            this.clearErrors()
+            this.$refs.clientForm.resetValidation()
             this.$emit('update-client', response.data)
           })
           .catch((error) => {
