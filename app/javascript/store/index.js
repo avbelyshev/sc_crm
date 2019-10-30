@@ -4,10 +4,14 @@ import createPersistedState from 'vuex-persistedstate'
 
 Vue.use(Vuex)
 
+import organization from './modules/organization'
+
 export default new Vuex.Store({
   state: {},
   mutations: {},
   actions: {},
-  modules: {},
+  modules: {
+    organization
+  },
   plugins: [createPersistedState()]
 })

@@ -54,7 +54,7 @@
           .then(response => { this.kinds = response.data })
       },
       getOrganizations() {
-        this.$backend.organizations.index()
+        this.$backend.organizations.index('')
           .then(response => { this.organizations = response.data })
       },
       fetchEquipment(id) {
