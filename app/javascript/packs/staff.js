@@ -4,6 +4,7 @@ import { backend } from '../api/index.js'
 import '../quasar/index.js'
 import router from '../router/index.js'
 import store from '../store/index'
+import '../sockets/index'
 
 Vue.prototype.$backend = backend
 

@@ -58,6 +58,20 @@
       OrganizationsFilter,
       OrganizationsList,
       OrganizationForm
+    },
+    subscriptions: {
+      OrganizationsChannel: {
+        connected() {
+          console.log("connected")
+        },
+        received(data) {
+          console.log("received = ", data)
+          this.fetchOrganizations()
+        },
+        disconnected() {
+          console.log("disconnected")
+        }
+      }
     }
   }
 </script>
