@@ -66,7 +66,7 @@
           .then(response => { this.client = response.data })
       },
       getOrganizations() {
-        this.$backend.organizations.index()
+        this.$backend.organizations.index('')
           .then(response => { this.organizationsList = response.data })
       },
       fillFormFields(id) {

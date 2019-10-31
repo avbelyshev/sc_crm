@@ -4,6 +4,7 @@
       div.flex.justify-center(v-if="loading")
         q-spinner-hourglass(color="primary" size="8em" :thickness="10")
       div(v-else)
+        OrganizationsFilter
         OrganizationsList(:organizations="organizations")
     q-separator(vertical)
     .col-lg-3.q-pa-md
@@ -13,6 +14,7 @@
 </template>
 
 <script>
+  import OrganizationsFilter from './filter.vue'
   import OrganizationsList from './list.vue'
   import OrganizationForm from './form.vue'
 
@@ -26,9 +28,21 @@
     created() {
       this.fetchOrganizations()
     },
+    computed: {
+      filter() {
+        return this.$store.state.organization.filter
+      }
+    },
+    watch: {
+      filter() {
+        this.fetchOrganizations()
+      }
+    },
     methods: {
       fetchOrganizations() {
-        this.$backend.organizations.index()
+        let filter = ''
+        if (this.filter) {filter = '?filter=' + this.filter }
+        this.$backend.organizations.index(filter)
           .then(response => { this.organizations = response.data })
           .finally(() => this.loading = false)
       },
@@ -41,8 +55,23 @@
       }
     },
     components: {
+      OrganizationsFilter,
       OrganizationsList,
       OrganizationForm
+    },
+    subscriptions: {
+      OrganizationsChannel: {
+        connected() {
+          console.log("connected")
+        },
+        received(data) {
+          console.log("received = ", data)
+          this.fetchOrganizations()
+        },
+        disconnected() {
+          console.log("disconnected")
+        }
+      }
     }
   }
 </script>

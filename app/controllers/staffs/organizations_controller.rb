@@ -3,7 +3,8 @@ class Staffs::OrganizationsController < ApplicationController
   before_action :set_organization, only: %i[edit update destroy]
 
   def index
-    @organizations = Organization.all
+    scope = perform_filter(params[:filter])
+    @organizations = scope
   end
 
   def create
@@ -42,6 +43,11 @@ class Staffs::OrganizationsController < ApplicationController
 
   def set_organization
     @organization = Organization.find(params[:id])
+  end
+
+  def perform_filter(filter)
+    return Organization.all if filter.blank?
+    Organization.search(filter)
   end
 
   def organization_params

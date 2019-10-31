@@ -25,10 +25,10 @@
       return {
         columns: [
           { name: 'id', label: 'id', field: 'id', align: 'left' },
-          { name: 'name', label: 'Name', field: 'name', align: 'left' },
+          { name: 'name', label: 'Name', field: 'name', align: 'left', sortable: true },
           { name: 'legal_form', label: 'Legal form', field: 'legal_form', align: 'left' },
-          { name: 'inn', label: 'Inn', field: 'inn', align: 'left' },
-          { name: 'ogrn', label: 'Ogrn', field: 'ogrn', align: 'left' },
+          { name: 'inn', label: 'Inn', field: 'inn', align: 'left', sortable: true },
+          { name: 'ogrn', label: 'Ogrn', field: 'ogrn', align: 'left', sortable: true },
           { name: 'action', label: 'Action', align: 'center' }
         ],
         pagination: {

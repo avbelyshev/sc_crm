@@ -28,7 +28,7 @@ const backend = {
     destroy: (id) => adapter.delete(`/staffs/clients/${id}`),
   },
   organizations: {
-    index: () => adapter.get('/staffs/organizations'),
+    index: (filter) => adapter.get('/staffs/organizations' + filter),
     create: (params) => adapter.post('/staffs/organizations', params),
     edit: (id) => adapter.get(`/staffs/organizations/${id}/edit`),
     update: (id, params) => adapter.patch(`/staffs/organizations/${id}`, params),
